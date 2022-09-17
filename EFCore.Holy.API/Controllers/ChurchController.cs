@@ -1,6 +1,7 @@
 ﻿using EFCore.Holy.Business;
 using EFCore.Holy.Data.Interfaces;
 using EFCore.Holy.Data.Models;
+using EFCore.Holy.Data.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCore.Holy.API.Controllers
@@ -9,7 +10,7 @@ namespace EFCore.Holy.API.Controllers
     [ApiController]
     public class ChurchController : ControllerBase
     {
-        private IChurchBusiness _business;
+        private readonly IChurchBusiness _business;
         public ChurchController(IChurchRepository churchRepository)
         {
             _business = new ChurchBusiness(churchRepository);
@@ -28,7 +29,7 @@ namespace EFCore.Holy.API.Controllers
         }
 
         [HttpPost("create")]
-        public IActionResult Post([FromBody] Church body)
+        public IActionResult Post([FromBody] NewChurch body)
         {
             return Ok(_business.Add(body));
         }

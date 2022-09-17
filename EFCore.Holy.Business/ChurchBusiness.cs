@@ -1,5 +1,6 @@
 ﻿using EFCore.Holy.Data.Interfaces;
 using EFCore.Holy.Data.Models;
+using EFCore.Holy.Data.Models.DTO;
 
 namespace EFCore.Holy.Business
 {
@@ -11,8 +12,14 @@ namespace EFCore.Holy.Business
             _repository = churchRepository;
         }
 
-        public bool Add(Church church)
+        public bool Add(NewChurch data)
         {
+            Church church = new()
+            {
+                Name = data.Name,
+                IsCongregation = !!data.IsCongregation
+            };
+
             _repository.Add(church);
 
             return true;

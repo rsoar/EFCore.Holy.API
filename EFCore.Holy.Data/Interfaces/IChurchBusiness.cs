@@ -1,4 +1,5 @@
 ﻿using EFCore.Holy.Data.Models;
+using EFCore.Holy.Data.Models.DTO;
 
 namespace EFCore.Holy.Data.Interfaces
 {
@@ -6,6 +7,6 @@ namespace EFCore.Holy.Data.Interfaces
     {
         List<Church> ToList();
         Church FindById(int id);
-        bool Add(Church church);
+        bool Add(NewChurch church);
     }
 }
