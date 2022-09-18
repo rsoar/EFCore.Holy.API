@@ -17,11 +17,11 @@ namespace EFCore.Holy.API.Extensions
 
             return builder;
         }
-
         public static WebApplicationBuilder AddServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddScoped(typeof(IChurchBusiness), typeof(ChurchBusiness));
-            builder.Services.AddScoped(typeof(IChurchRepository), typeof(ChurchRepository));
+            builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
+            builder.Services.AddScoped<IChurchRepository, ChurchRepository>();
+            builder.Services.AddScoped<IChurchBusiness, ChurchBusiness>();
 
             return builder;
         }

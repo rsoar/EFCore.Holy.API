@@ -1,4 +1,5 @@
-﻿using EFCore.Holy.Data.Interfaces;
+﻿using EFCore.Holy.Business.Handling;
+using EFCore.Holy.Data.Interfaces;
 using EFCore.Holy.Data.Models;
 using EFCore.Holy.Data.Models.DTO;
 
@@ -27,7 +28,13 @@ namespace EFCore.Holy.Business
 
         public Church FindById(int id)
         {
-            return _repository.FindById(id);
+            
+            Church? church = _repository.FindById(id);
+
+            if(church == null)
+                throw new HttpException(404, Error.ChurchNotFound);
+
+            return church;
         }
 
         public List<Church> ToList()

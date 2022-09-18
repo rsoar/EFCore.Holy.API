@@ -7,6 +7,6 @@ namespace EFCore.Holy.Data.Interfaces
         List<Church> ToList();
 
         void Add(Church newChurch);
-        Church FindById(int id);
+        Church? FindById(int id);
     }
 }

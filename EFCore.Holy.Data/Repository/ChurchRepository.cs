@@ -6,26 +6,27 @@ namespace EFCore.Holy.Data.Repository
 {
     public class ChurchRepository : IChurchRepository
     {
-        private readonly DatabaseContext _context;
-        public ChurchRepository(DatabaseContext context)
+        private readonly DatabaseContext _dbContext;
+
+        public ChurchRepository(DatabaseContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
         public List<Church> ToList()
         {
-            return _context.Churchs.ToList();
+            return _dbContext.Churchs.ToList();
         }
 
         public void Add(Church newChurch)
         {
-            _context.Churchs.Add(newChurch);
-            _context.SaveChanges();
+            _dbContext.Churchs.Add(newChurch);
+            _dbContext.SaveChanges();
         }
 
-        public Church FindById(int id)
+        public Church? FindById(int id)
         {
-            throw new NotImplementedException();
+            return _dbContext.Churchs.Find(id);
         }
     }
 }
