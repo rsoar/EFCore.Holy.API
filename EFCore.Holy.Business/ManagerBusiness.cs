@@ -23,6 +23,9 @@ namespace EFCore.Holy.Business
             if (!MailService.IsValid(data.Email))
                 throw new HttpException(400, Error.InvalidMail);
 
+            if (!RoleService.IsValidRole(data.Role))
+                throw new HttpException(400, Error.InvalidRole);
+
             var manager = _managerRepository.FindByEmail(data.Email);
 
             if (manager is not null)
