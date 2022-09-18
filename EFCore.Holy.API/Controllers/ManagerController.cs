@@ -2,6 +2,7 @@
 using EFCore.Holy.Business.Handling;
 using EFCore.Holy.Data.Interfaces;
 using EFCore.Holy.Data.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EFCore.Holy.API.Controllers
@@ -16,14 +17,16 @@ namespace EFCore.Holy.API.Controllers
             _business = new ManagerBusiness(managerRepository, churchBusiness);
         }
 
+
         [HttpGet("all")]
+        [Authorize()]
         public IActionResult Get()
         {
             return Ok(_business.FindAll());
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Post([FromBody] CreateManager createManager)
+        public async Task<IActionResult> Create([FromBody] CreateManager createManager)
         {
             try
             {
@@ -35,7 +38,36 @@ namespace EFCore.Holy.API.Controllers
             {
                 return StatusCode(ex.StatusCode, ex.Message);
             }
+        }
 
+        [HttpPost("login")]
+        [AllowAnonymous()]
+        public IActionResult Login([FromBody] Login login)
+        {
+            try
+            {
+                var token = _business.Login(login);
+                return StatusCode(200, token);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _business.Delete(id);
+
+                return StatusCode(200, Success.ManagerDeleted);
+            }
+            catch (HttpException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Message);
+            }
         }
     }
 }

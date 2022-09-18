@@ -6,8 +6,9 @@ namespace EFCore.Holy.Data.Interfaces
     public interface IManagerBusiness
     {
         Task<bool> Add(CreateManager data);
-        bool Delete(int id);
+        void Delete(int id);
         Manager FindById(int id);
         List<Manager> FindAll();
+        string Login(Login login);
     }
 }

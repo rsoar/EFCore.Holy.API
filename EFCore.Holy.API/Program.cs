@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Dependency injection
 DataExtensions.AddDbContext(builder);
 DataExtensions.AddServices(builder);
+DataExtensions.AddAuthenticate(builder);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

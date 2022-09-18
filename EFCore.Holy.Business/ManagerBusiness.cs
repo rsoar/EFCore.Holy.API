@@ -67,9 +67,11 @@ namespace EFCore.Holy.Business
             return true;
         }
 
-        public bool Delete(int id)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            Manager managerById = FindById(id);
+
+            _managerRepository.Delete(managerById);
         }
 
         public List<Manager> FindAll()
@@ -79,7 +81,30 @@ namespace EFCore.Holy.Business
 
         public Manager FindById(int id)
         {
-            throw new NotImplementedException();
+            Manager? managerbyId = _managerRepository.FindById(id);
+
+            if (managerbyId == null)
+                throw new HttpException(404, Error.ManagerNotFound);
+
+            return managerbyId;
+        }
+
+        public string Login(Login data)
+        {
+            if (!MailService.IsValid(data.Email))
+                throw new HttpException(400, Error.InvalidMail);
+
+            var managerByMail = _managerRepository.FindByEmail(data.Email);
+
+            if (managerByMail == null)
+                throw new HttpException(400, Error.InvalidCredentials);
+
+            bool isValidPassword = BCrypt.Net.BCrypt.Verify(data.Password, managerByMail.Password);
+
+            if (!isValidPassword)
+                throw new HttpException(400, Error.InvalidCredentials);
+
+            return TokenService.GenerateToken(managerByMail);
         }
     }
 }
