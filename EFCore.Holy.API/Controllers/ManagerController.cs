@@ -12,9 +12,13 @@ namespace EFCore.Holy.API.Controllers
     public class ManagerController : ControllerBase
     {
         private readonly IManagerBusiness _business;
-        public ManagerController(IManagerRepository managerRepository, IChurchBusiness churchBusiness)
+        private readonly IHttpContextAccessor _contextAccessor;
+        public ManagerController(
+            IManagerRepository managerRepository,
+            IChurchBusiness churchBusiness,
+            IHttpContextAccessor contextAccessor)
         {
-            _business = new ManagerBusiness(managerRepository, churchBusiness);
+            _business = new ManagerBusiness(contextAccessor, managerRepository, churchBusiness);
         }
 
 
@@ -26,6 +30,7 @@ namespace EFCore.Holy.API.Controllers
         }
 
         [HttpPost("register")]
+        [Authorize()]
         public async Task<IActionResult> Create([FromBody] CreateManager createManager)
         {
             try

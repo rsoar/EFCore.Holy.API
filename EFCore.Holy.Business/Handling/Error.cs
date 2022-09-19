@@ -9,5 +9,6 @@
         public const string ChurchNotFound = "CHURCH_NOT_FOUND";
         public const string InvalidCredentials = "INVALID_CREDENTIALS";
         public const string ManagerNotFound = "MANAGER_NOT_FOUND";
+        public const string DoesHavePermission = "USER_DOES_NOT_HAVE_PERMISSION";
     }
 }

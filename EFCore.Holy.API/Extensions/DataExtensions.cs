@@ -23,6 +23,7 @@ namespace EFCore.Holy.API.Extensions
         }
         public static WebApplicationBuilder AddServices(WebApplicationBuilder builder)
         {
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<IManagerRepository, ManagerRepository>();
             builder.Services.AddScoped<IChurchRepository, ChurchRepository>();
             builder.Services.AddScoped<IChurchBusiness, ChurchBusiness>();

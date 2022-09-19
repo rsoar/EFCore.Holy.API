@@ -19,8 +19,9 @@ namespace EFCore.Holy.Business.Services
             {
                 new Claim("id", manager.Id.ToString()),
                 new Claim("name", manager.Name),
-                new Claim("role", manager.Role.ToString())
-            });
+                new Claim("role", manager.Role.ToString()),
+                new Claim("churchId", manager.IdChurch.ToString())
+            }); ;
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -31,6 +32,11 @@ namespace EFCore.Holy.Business.Services
 
             var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public static Claim GetProperty(IEnumerable<Claim> claims, string key)
+        {
+            return claims.SingleOrDefault(c => c.Type == key || c.Type.Contains(key));
         }
     }
 }

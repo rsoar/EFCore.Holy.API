@@ -3,22 +3,38 @@ using EFCore.Holy.Business.Services;
 using EFCore.Holy.Data.Interfaces;
 using EFCore.Holy.Data.Models;
 using EFCore.Holy.Data.Models.DTO;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace EFCore.Holy.Business
 {
     public class ManagerBusiness : IManagerBusiness
     {
+        private readonly IHttpContextAccessor _httpContext;
         private readonly IManagerRepository _managerRepository;
         private readonly IChurchBusiness _churchBusiness;
-        public ManagerBusiness(IManagerRepository repository, IChurchBusiness churchBusiness)
+        public ManagerBusiness(
+            IHttpContextAccessor httpContext,
+            IManagerRepository repository,
+            IChurchBusiness churchBusiness)
         {
+            _httpContext = httpContext;
             _managerRepository = repository;
             _churchBusiness = churchBusiness;
         }
 
         public async Task<bool> Add(CreateManager data)
         {
+            var userChurchId = TokenService.GetProperty(_httpContext.HttpContext.User.Claims, "churchId");
+            var userRole = TokenService.GetProperty(_httpContext.HttpContext.User.Claims, "role");
+
+            if (!RoleService.IsShepherd(int.Parse(userRole.Value)))
+                throw new HttpException(401, Error.DoesHavePermission);
+
             Church church = _churchBusiness.FindById(data.IdChurch);
+
+            if (church.Id != int.Parse(userChurchId.Value) && !RoleService.IsShepherd(data.Role))
+                throw new HttpException(401, Error.DoesHavePermission);
 
             if (!MailService.IsValid(data.Email))
                 throw new HttpException(400, Error.InvalidMail);
